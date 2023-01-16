@@ -20,8 +20,22 @@ const getComputerChoice = () => {
  * @returns the player's choice
  */
 const getPlayerChoice = () => {
-
+    do {
+        const playerSelection = capitalize(prompt("Enter your choice (Rock, Paper, or Scissors):"));
+        if (playerSelection == "Rock" || playerSelection == "Paper" || playerSelection == "Scissors") {
+            return playerSelection;
+        }
+    } while (true);
 };
+
+/**
+ * Capitalizes the input
+ * 
+ * @returns capitalized string
+ */
+function capitalize(str) {
+    return str.charAt(0).toUpperCase() + str.substring(1).toLowerCase();
+}
 
 /**
  * Plays a single round of "Rock, Papers, Scissors!"
@@ -40,6 +54,7 @@ const playRound = (playerSelection, computerSelection) => {
             else if (playerSelection == 'Scissors') {
                 return [noTieString(false), false, false];
             }
+            break;
         case "Paper":
             if (playerSelection == 'Scissors') {
                 return [noTieString(true), true, false];
@@ -47,6 +62,7 @@ const playRound = (playerSelection, computerSelection) => {
             else if (playerSelection == 'Rock') {
                 return [noTieString(false), false, false];
             }
+            break;
         case "Scissors":
             if (playerSelection == 'Rock') {
                 return [noTieString(true), true, false];
@@ -54,6 +70,7 @@ const playRound = (playerSelection, computerSelection) => {
             else if (playerSelection == 'Paper') {
                 return [noTieString(false), false, false];
             }
+            break;
     }
     return ["It's a tie!", null, true];
 };
@@ -65,5 +82,10 @@ function game() {
     let p = 0, c = 0;
     for (let i = 0; i < 5; i++) {
         const round = playRound(getPlayerChoice(), getComputerChoice());
+        console.log(round[0]);
+        if (round[2]) continue;
+        p += round[1] ? 1 : 0;
+        c += round[1] ? 0 : 1;
     }
+    console.log(p > c ? "You win!" : p == c ? "It's a tie!" : "You lose!");
 }
