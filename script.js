@@ -45,7 +45,7 @@ function capitalize(str) {
  * @returns an array [return string, did the player win, was it a tie]
  */
 const playRound = (playerSelection, computerSelection) => {
-    const noTieString = (won) => `You ${won ? 'Win' : 'Lost'}! ${won ? playerSelection : computerSelection} beats ${won ? computerSelection : playerSelection}`;
+    const noTieString = (won) => `You ${won ? 'Win' : 'Lost'}! ${playerSelection} ${won ? "beats" : "loses to"} ${computerSelection}`;
     switch (computerSelection) {
         case "Rock":
             if (playerSelection == 'Paper') {
@@ -78,7 +78,7 @@ const playRound = (playerSelection, computerSelection) => {
 /**
  * Plays 5 games and reports the winner at the end.
  */
-function game() {
+function game_old() {
     let p = 0, c = 0;
     for (let i = 0; i < 5; i++) {
         const round = playRound(getPlayerChoice(), getComputerChoice());
@@ -89,3 +89,28 @@ function game() {
     }
     console.log(p > c ? "You win!" : p == c ? "It's a tie!" : "You lose!");
 }
+
+let p = 0, c = 0;
+
+const buttons = document.querySelectorAll(`button[class="option"]`);
+const div = document.querySelector('.result');
+
+buttons.forEach(button => {
+    button.addEventListener('click', (e) => {
+        const ret = playRound(e.target.getAttribute('data-name'), getComputerChoice());
+        if (ret[1]) {
+            p++;
+        }
+        else if (!ret[2]) {
+            c++;
+        }
+
+        if (p == 5 || c == 5) {
+            div.textContent = `You ${p == 5 ? 'won' : 'lose'}!`;
+            buttons.forEach(b => {b.setAttribute('disabled', null); });
+        }
+        else {
+            div.textContent = `You: ${p} | Computer: ${c} | ${ret[0]}`;
+        }
+    });
+});
